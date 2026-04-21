@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Login — RZStore</title>
+
+  <!-- FOUC prevention -->
+  <script>(function(){const t=localStorage.getItem('rz_theme');const d=t==='dark'||(t===null&&window.matchMedia('(prefers-color-scheme:dark)').matches);if(d){document.documentElement.classList.add('dark');document.documentElement.setAttribute('data-theme','dark');}else{document.documentElement.setAttribute('data-theme','light');}})()</script>
+
+  <!-- Tailwind config -->
+  <script>tailwind.config={darkMode:'class',theme:{extend:{colors:{primary:{DEFAULT:'#6366f1',dark:'#4f46e5'}}}}}</script>
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+
+  <!-- Design system -->
+  <link rel="stylesheet" href="css/style.css" />
+  <style>
+    html.dark body { background-color: #0f172a !important; color: #e2e8f0 !important; }
+    html.dark nav { background-color: rgba(15,23,42,0.97) !important; border-color: #334155 !important; }
+    html.dark .bg-white { background-color: #1e293b !important; }
+    html.dark .bg-gray-50 { background-color: #0f172a !important; }
+    html.dark .bg-gray-100 { background-color: #1e293b !important; }
+    html.dark .text-gray-900 { color: #f1f5f9 !important; }
+    html.dark .text-gray-800 { color: #e2e8f0 !important; }
+    html.dark .text-gray-700 { color: #cbd5e1 !important; }
+    html.dark .text-gray-600 { color: #94a3b8 !important; }
+    html.dark .text-gray-500 { color: #64748b !important; }
+    html.dark .border-gray-200 { border-color: #334155 !important; }
+    html.dark .border-gray-300 { border-color: #475569 !important; }
+    html.dark .border-gray-100 { border-color: #1e293b !important; }
+    html.dark input:not([type=radio]):not([type=checkbox]),html.dark textarea,html.dark select { background-color: #1e293b !important; color: #f1f5f9 !important; border-color: #475569 !important; }
+    html.dark footer { background-color: #020617 !important; }
+    html.dark #mobile-drawer { background-color: #1e293b !important; }
+    html.dark #admin-sidebar { background-color: #020617 !important; }
+    html.dark #product-modal > div, html.dark #order-detail-modal > div { background-color: #1e293b !important; }
+    html.dark thead tr { background-color: rgba(30,41,59,0.9) !important; }
+    html.dark td, html.dark th { border-color: #334155 !important; color: #cbd5e1 !important; }
+  </style>
+</head>
+<body class="min-h-screen bg-gradient-to-br from-indigo-50 via-white to-purple-50 dark:from-slate-900 dark:via-slate-800 dark:to-slate-900 flex items-center justify-center p-4 font-sans">
+
+  <!-- Dark mode toggle pojok kanan atas -->
+  <button id="dark-toggle" title="Toggle dark mode"
+    class="fixed top-4 right-4 z-50 w-10 h-10 rounded-xl bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-700 shadow flex items-center justify-center hover:bg-gray-50 dark:hover:bg-slate-700 transition">
+    <i class="fas fa-moon text-slate-500 dark:text-slate-300 text-lg"></i>
+  </button>
+
+  <div class="w-full max-w-md">
+
+    <!-- Logo -->
+    <div class="text-center mb-8">
+      <a href="index.html" class="inline-flex items-center gap-2 text-2xl font-bold text-indigo-600 dark:text-indigo-400">
+        <i class="fas fa-store"></i>
+        <span>RZStore</span>
+      </a>
+      <p class="text-gray-500 dark:text-slate-400 text-sm mt-1">Fashion terbaik untuk kamu</p>
+    </div>
+
+    <!-- Card -->
+    <div class="bg-white dark:bg-slate-800 rounded-2xl shadow-xl p-8 border border-gray-100 dark:border-slate-700">
+
+      <!-- Tabs -->
+      <div class="flex border-b border-gray-200 dark:border-slate-700 mb-6">
+        <button id="tab-login"
+          class="flex-1 py-2.5 text-sm font-semibold border-b-2 border-indigo-600 text-indigo-600 transition-colors">
+          Masuk
+        </button>
+        <button id="tab-register"
+          class="flex-1 py-2.5 text-sm font-semibold border-b-2 border-transparent text-gray-500 dark:text-slate-400 hover:text-gray-700 dark:hover:text-slate-200 transition-colors">
+          Daftar
+        </button>
+      </div>
+
+      <!-- ===== LOGIN PANEL ===== -->
+      <div id="panel-login">
+        <h2 class="text-xl font-bold text-gray-900 dark:text-white mb-1">Selamat Datang Kembali</h2>
+        <p class="text-sm text-gray-500 dark:text-slate-400 mb-6">Masuk ke akun RZStore kamu</p>
+
+        <!-- General error -->
+        <div id="login-general-error" class="hidden mb-4 p-3 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg text-sm text-red-600 dark:text-red-400 flex items-center gap-2">
+          <i class="fas fa-exclamation-circle"></i>
+          <span></span>
+        </div>
+
+        <form id="login-form" novalidate class="space-y-4">
+          <!-- Email -->
+          <div>
+            <label for="login-email" class="block text-sm font-medium text-gray-700 dark:text-slate-300 mb-1.5">
+              Email
+            </label>
+            <div class="relative">
+              <span class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">
+                <i class="fas fa-envelope text-sm"></i>
+              </span>
+              <input type="email" id="login-email" placeholder="email@contoh.com"
+                class="w-full pl-9 pr-4 py-2.5 rounded-lg border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-slate-400 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition" />
+            </div>
+            <p id="login-email-error" class="hidden mt-1 text-xs text-red-500"></p>
+          </div>
+
+          <!-- Password -->
+          <div>
+            <label for="login-password" class="block text-sm font-medium text-gray-700 dark:text-slate-300 mb-1.5">
+              Password
+            </label>
+            <div class="relative">
+              <span class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">
+                <i class="fas fa-lock text-sm"></i>
+              </span>
+              <input type="password" id="login-password" placeholder="••••••••"
+                class="w-full pl-9 pr-10 py-2.5 rounded-lg border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-slate-400 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition" />
+              <button type="button" id="toggle-login-pw"
+                class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 dark:hover:text-slate-200">
+                <i class="fas fa-eye text-sm"></i>
+              </button>
+            </div>
+            <p id="login-password-error" class="hidden mt-1 text-xs text-red-500"></p>
+          </div>
+
+          <button type="submit"
+            class="w-full py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold rounded-lg text-sm transition-colors focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 mt-2">
+            <i class="fas fa-sign-in-alt mr-2"></i>Masuk
+          </button>
+        </form>
+
+        <!-- Demo credentials -->
+        <div class="mt-5 p-3 bg-indigo-50 dark:bg-indigo-900/20 rounded-lg border border-indigo-100 dark:border-indigo-800">
+          <p class="text-xs font-semibold text-indigo-700 dark:text-indigo-300 mb-1.5">
+            <i class="fas fa-info-circle mr-1"></i>Akun Demo
+          </p>
+          <div class="space-y-1 text-xs text-indigo-600 dark:text-indigo-400">
+            <p><span class="font-medium">Customer:</span> demo@rzstore.com / 123456</p>
+            <p><span class="font-medium">Admin:</span> admin@rzstore.com / admin123</p>
+          </div>
+          <button id="force-seed-btn" class="mt-2 w-full text-xs text-indigo-500 dark:text-indigo-400 hover:text-indigo-700 underline text-left">
+            <i class="fas fa-sync-alt mr-1"></i>Reset akun default
+          </button>
+        </div>
+      </div>
+
+      <!-- ===== REGISTER PANEL ===== -->
+      <div id="panel-register" class="hidden">
+        <h2 class="text-xl font-bold text-gray-900 dark:text-white mb-1">Buat Akun Baru</h2>
+        <p class="text-sm text-gray-500 dark:text-slate-400 mb-6">Bergabung dengan RZStore sekarang</p>
+
+        <div id="reg-general-error" class="hidden mb-4 p-3 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg text-sm text-red-600 dark:text-red-400 flex items-center gap-2">
+          <i class="fas fa-exclamation-circle"></i>
+          <span></span>
+        </div>
+
+        <form id="register-form" novalidate class="space-y-4">
+          <!-- Name -->
+          <div>
+            <label for="reg-name" class="block text-sm font-medium text-gray-700 dark:text-slate-300 mb-1.5">
+              Nama Lengkap
+            </label>
+            <div class="relative">
+              <span class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">
+                <i class="fas fa-user text-sm"></i>
+              </span>
+              <input type="text" id="reg-name" placeholder="Nama lengkap kamu"
+                class="w-full pl-9 pr-4 py-2.5 rounded-lg border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-slate-400 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition" />
+            </div>
+            <p id="reg-name-error" class="hidden mt-1 text-xs text-red-500"></p>
+          </div>
+
+          <!-- Email -->
+          <div>
+            <label for="reg-email" class="block text-sm font-medium text-gray-700 dark:text-slate-300 mb-1.5">
+              Email
+            </label>
+            <div class="relative">
+              <span class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">
+                <i class="fas fa-envelope text-sm"></i>
+              </span>
+              <input type="email" id="reg-email" placeholder="email@contoh.com"
+                class="w-full pl-9 pr-4 py-2.5 rounded-lg border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-slate-400 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition" />
+            </div>
+            <p id="reg-email-error" class="hidden mt-1 text-xs text-red-500"></p>
+          </div>
+
+          <!-- Password -->
+          <div>
+            <label for="reg-password" class="block text-sm font-medium text-gray-700 dark:text-slate-300 mb-1.5">
+              Password
+            </label>
+            <div class="relative">
+              <span class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">
+                <i class="fas fa-lock text-sm"></i>
+              </span>
+              <input type="password" id="reg-password" placeholder="Minimal 6 karakter"
+                class="w-full pl-9 pr-10 py-2.5 rounded-lg border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-slate-400 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition" />
+              <button type="button" id="toggle-reg-pw"
+                class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 dark:hover:text-slate-200">
+                <i class="fas fa-eye text-sm"></i>
+              </button>
+            </div>
+            <p id="reg-password-error" class="hidden mt-1 text-xs text-red-500"></p>
+          </div>
+
+          <button type="submit"
+            class="w-full py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold rounded-lg text-sm transition-colors focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 mt-2">
+            <i class="fas fa-user-plus mr-2"></i>Daftar Sekarang
+          </button>
+        </form>
+      </div>
+
+    </div>
+
+    <!-- Back to home -->
+    <p class="text-center mt-6 text-sm text-gray-500 dark:text-slate-400">
+      <a href="index.html" class="text-indigo-600 dark:text-indigo-400 hover:underline font-medium">
+        <i class="fas fa-arrow-left mr-1"></i>Kembali ke Beranda
+      </a>
+    </p>
+  </div>
+
+  <script type="module">
+    import { seedDataIfNeeded, initDarkMode, wireDarkToggle } from './js/app.js';
+    import { initLoginPage } from './js/auth.js';
+
+    document.addEventListener('DOMContentLoaded', async () => {
+      initDarkMode();
+      wireDarkToggle();
+      await seedDataIfNeeded();
+      initLoginPage();
+
+      // Force seed button
+      document.getElementById('force-seed-btn')?.addEventListener('click', () => {
+        localStorage.removeItem('rz_users');
+        initLoginPage();
+        alert('Akun default berhasil direset! Silakan login kembali.');
+      });
+
+      // Password visibility toggles
+      const toggleLoginPw = document.getElementById('toggle-login-pw');
+      const loginPwInput  = document.getElementById('login-password');
+      toggleLoginPw?.addEventListener('click', () => {
+        const isText = loginPwInput.type === 'text';
+        loginPwInput.type = isText ? 'password' : 'text';
+        toggleLoginPw.innerHTML = isText
+          ? '<i class="fas fa-eye text-sm"></i>'
+          : '<i class="fas fa-eye-slash text-sm"></i>';
+      });
+
+      const toggleRegPw = document.getElementById('toggle-reg-pw');
+      const regPwInput  = document.getElementById('reg-password');
+      toggleRegPw?.addEventListener('click', () => {
+        const isText = regPwInput.type === 'text';
+        regPwInput.type = isText ? 'password' : 'text';
+        toggleRegPw.innerHTML = isText
+          ? '<i class="fas fa-eye text-sm"></i>'
+          : '<i class="fas fa-eye-slash text-sm"></i>';
+      });
+    });
+  </script>
+</body>
+</html>

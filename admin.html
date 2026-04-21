@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin Panel — RZStore</title>
+  <script>(function(){const t=localStorage.getItem('rz_theme');const d=t==='dark'||(t===null&&window.matchMedia('(prefers-color-scheme:dark)').matches);if(d){document.documentElement.classList.add('dark');document.documentElement.setAttribute('data-theme','dark');}else{document.documentElement.setAttribute('data-theme','light');}})()</script>
+  <script>tailwind.config={darkMode:'class',theme:{extend:{colors:{primary:{DEFAULT:'#6366f1',dark:'#4f46e5'}}}}}</script>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/style.css" />
+  <style>
+    html.dark body { background-color: #0f172a !important; color: #e2e8f0 !important; }
+    html.dark nav { background-color: rgba(15,23,42,0.97) !important; border-color: #334155 !important; }
+    html.dark .bg-white { background-color: #1e293b !important; }
+    html.dark .bg-gray-50 { background-color: #0f172a !important; }
+    html.dark .bg-gray-100 { background-color: #1e293b !important; }
+    html.dark .text-gray-900 { color: #f1f5f9 !important; }
+    html.dark .text-gray-800 { color: #e2e8f0 !important; }
+    html.dark .text-gray-700 { color: #cbd5e1 !important; }
+    html.dark .text-gray-600 { color: #94a3b8 !important; }
+    html.dark .text-gray-500 { color: #64748b !important; }
+    html.dark .border-gray-200 { border-color: #334155 !important; }
+    html.dark .border-gray-300 { border-color: #475569 !important; }
+    html.dark .border-gray-100 { border-color: #1e293b !important; }
+    html.dark input:not([type=radio]):not([type=checkbox]),html.dark textarea,html.dark select { background-color: #1e293b !important; color: #f1f5f9 !important; border-color: #475569 !important; }
+    html.dark footer { background-color: #020617 !important; }
+    html.dark #mobile-drawer { background-color: #1e293b !important; }
+    html.dark #admin-sidebar { background-color: #020617 !important; }
+    html.dark #product-modal > div, html.dark #order-detail-modal > div { background-color: #1e293b !important; }
+    html.dark thead tr { background-color: rgba(30,41,59,0.9) !important; }
+    html.dark td, html.dark th { border-color: #334155 !important; color: #cbd5e1 !important; }
+  </style>
+</head>
+<body class="bg-gray-100 dark:bg-slate-900 font-sans min-h-screen">
+
+<div class="flex h-screen overflow-hidden">
+
+  <!-- ===== SIDEBAR ===== -->
+  <aside id="admin-sidebar" class="hidden md:flex flex-col w-64 bg-slate-900 dark:bg-slate-950 text-white flex-shrink-0">
+    <!-- Logo -->
+    <div class="p-6 border-b border-slate-700">
+      <a href="index.html" class="flex items-center gap-2 text-xl font-bold text-indigo-400">
+        <i class="fas fa-store"></i><span>RZStore</span>
+      </a>
+      <p class="text-xs text-slate-500 mt-1">Admin Panel</p>
+    </div>
+
+    <!-- Nav -->
+    <nav class="flex-1 p-4 space-y-1">
+      <button data-nav="dashboard" class="w-full flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm font-medium transition text-gray-700 dark:text-slate-300">
+        <i class="fas fa-chart-bar w-4 text-slate-400"></i>Dashboard
+      </button>
+      <button data-nav="products" class="w-full flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm font-medium transition text-gray-700 dark:text-slate-300">
+        <i class="fas fa-box w-4 text-slate-400"></i>Produk
+      </button>
+      <button data-nav="orders" class="w-full flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm font-medium transition text-gray-700 dark:text-slate-300">
+        <i class="fas fa-shopping-bag w-4 text-slate-400"></i>Pesanan
+      </button>
+      <button data-nav="users" class="w-full flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm font-medium transition text-gray-700 dark:text-slate-300">
+        <i class="fas fa-users w-4 text-slate-400"></i>Pengguna
+      </button>
+    </nav>
+
+    <!-- Footer -->
+    <div class="p-4 border-t border-slate-700 space-y-2">
+      <a href="index.html" class="flex items-center gap-2 px-4 py-2 text-sm text-slate-400 hover:text-white transition">
+        <i class="fas fa-external-link-alt w-4"></i>Lihat Toko
+      </a>
+      <button id="admin-logout" class="w-full flex items-center gap-2 px-4 py-2 text-sm text-red-400 hover:text-red-300 transition">
+        <i class="fas fa-sign-out-alt w-4"></i>Keluar
+      </button>
+    </div>
+  </aside>
+
+  <!-- ===== MAIN ===== -->
+  <div class="flex-1 flex flex-col overflow-hidden">
+
+    <!-- Top bar -->
+    <header class="bg-white dark:bg-slate-800 border-b border-gray-200 dark:border-slate-700 px-6 py-4 flex items-center justify-between flex-shrink-0">
+      <div class="flex items-center gap-3">
+        <button id="admin-menu-btn" class="md:hidden w-9 h-9 rounded-lg flex items-center justify-center hover:bg-gray-100 dark:hover:bg-slate-700 text-gray-600 dark:text-slate-300">
+          <i class="fas fa-bars"></i>
+        </button>
+        <h1 class="text-lg font-bold text-gray-900 dark:text-white">Admin Panel</h1>
+      </div>
+      <div class="flex items-center gap-3">
+        <button id="dark-toggle" class="w-9 h-9 rounded-lg flex items-center justify-center hover:bg-gray-100 dark:hover:bg-slate-700 transition">
+          <i class="fas fa-moon text-slate-600 dark:text-slate-300"></i>
+        </button>
+        <div class="flex items-center gap-2">
+          <div class="w-8 h-8 bg-indigo-600 rounded-full flex items-center justify-center text-white text-sm font-bold">A</div>
+          <span class="text-sm font-medium text-gray-700 dark:text-slate-300 hidden sm:block">Admin</span>
+        </div>
+      </div>
+    </header>
+
+    <!-- Content -->
+    <main class="flex-1 overflow-y-auto p-6">
+
+      <!-- ===== DASHBOARD ===== -->
+      <div id="section-dashboard" class="hidden">
+        <h2 class="text-xl font-bold text-gray-900 dark:text-white mb-6">Dashboard</h2>
+        <!-- Stats -->
+        <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+          <div class="bg-white dark:bg-slate-800 rounded-2xl p-5 border border-gray-200 dark:border-slate-700">
+            <div class="flex items-center justify-between mb-3">
+              <span class="text-sm text-gray-500 dark:text-slate-400">Total Produk</span>
+              <div class="w-9 h-9 bg-indigo-100 dark:bg-indigo-900/30 rounded-xl flex items-center justify-center"><i class="fas fa-box text-indigo-600 dark:text-indigo-400 text-sm"></i></div>
+            </div>
+            <p id="stat-products" class="text-2xl font-bold text-gray-900 dark:text-white">0</p>
+          </div>
+          <div class="bg-white dark:bg-slate-800 rounded-2xl p-5 border border-gray-200 dark:border-slate-700">
+            <div class="flex items-center justify-between mb-3">
+              <span class="text-sm text-gray-500 dark:text-slate-400">Total Pesanan</span>
+              <div class="w-9 h-9 bg-green-100 dark:bg-green-900/30 rounded-xl flex items-center justify-center"><i class="fas fa-shopping-bag text-green-600 dark:text-green-400 text-sm"></i></div>
+            </div>
+            <p id="stat-orders" class="text-2xl font-bold text-gray-900 dark:text-white">0</p>
+          </div>
+          <div class="bg-white dark:bg-slate-800 rounded-2xl p-5 border border-gray-200 dark:border-slate-700">
+            <div class="flex items-center justify-between mb-3">
+              <span class="text-sm text-gray-500 dark:text-slate-400">Total Pengguna</span>
+              <div class="w-9 h-9 bg-purple-100 dark:bg-purple-900/30 rounded-xl flex items-center justify-center"><i class="fas fa-users text-purple-600 dark:text-purple-400 text-sm"></i></div>
+            </div>
+            <p id="stat-users" class="text-2xl font-bold text-gray-900 dark:text-white">0</p>
+          </div>
+          <div class="bg-white dark:bg-slate-800 rounded-2xl p-5 border border-gray-200 dark:border-slate-700">
+            <div class="flex items-center justify-between mb-3">
+              <span class="text-sm text-gray-500 dark:text-slate-400">Total Revenue</span>
+              <div class="w-9 h-9 bg-amber-100 dark:bg-amber-900/30 rounded-xl flex items-center justify-center"><i class="fas fa-coins text-amber-600 dark:text-amber-400 text-sm"></i></div>
+            </div>
+            <p id="stat-revenue" class="text-xl font-bold text-gray-900 dark:text-white">Rp 0</p>
+          </div>
+        </div>
+        <!-- Recent Orders -->
+        <div class="bg-white dark:bg-slate-800 rounded-2xl border border-gray-200 dark:border-slate-700 overflow-hidden">
+          <div class="px-6 py-4 border-b border-gray-200 dark:border-slate-700">
+            <h3 class="font-semibold text-gray-900 dark:text-white">Pesanan Terbaru</h3>
+          </div>
+          <div class="overflow-x-auto">
+            <table class="w-full">
+              <thead class="bg-gray-50 dark:bg-slate-700/50">
+                <tr>
+                  <th class="text-left py-3 px-4 text-xs font-semibold text-gray-500 dark:text-slate-400 uppercase">ID Transaksi</th>
+                  <th class="text-left py-3 px-4 text-xs font-semibold text-gray-500 dark:text-slate-400 uppercase">Pelanggan</th>
+                  <th class="text-left py-3 px-4 text-xs font-semibold text-gray-500 dark:text-slate-400 uppercase">Total</th>
+                  <th class="text-left py-3 px-4 text-xs font-semibold text-gray-500 dark:text-slate-400 uppercase">Status</th>
+                </tr>
+              </thead>
+              <tbody id="recent-orders"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- ===== PRODUCTS ===== -->
+      <div id="section-products" class="hidden">
+        <div class="flex items-center justify-between mb-6">
+          <h2 class="text-xl font-bold text-gray-900 dark:text-white">Manajemen Produk</h2>
+          <button id="add-product-btn" class="flex items-center gap-2 px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-semibold rounded-xl transition">
+            <i class="fas fa-plus"></i>Tambah Produk
+          </button>
+        </div>
+        <div class="bg-white dark:bg-slate-800 rounded-2xl border border-gray-200 dark:border-slate-700 overflow-hidden">
+          <div class="overflow-x-auto">
+            <table class="w-full">
+              <thead class="bg-gray-50 dark:bg-slate-700/50">
+                <tr>
+                  <th class="text-left py-3 px-4 text-xs font-semibold text-gray-500 dark:text-slate-400 uppercase">Foto</th>
+                  <th class="text-left py-3 px-4 text-xs font-semibold text-gray-500 dark:text-slate-400 uppercase">Nama</th>
+                  <th class="text-left py-3 px-4 text-xs font-semibold text-gray-500 dark:text-slate-400 uppercase">Kategori</th>
+                  <th class="text-left py-3 px-4 text-xs font-semibold text-gray-500 dark:text-slate-400 uppercase">Harga</th>
+                  <th class="text-left py-3 px-4 text-xs font-semibold text-gray-500 dark:text-slate-400 uppercase">Stok</th>
+                  <th class="text-left py-3 px-4 text-xs font-semibold text-gray-500 dark:text-slate-400 uppercase">Aksi</th>
+                </tr>
+              </thead>
+              <tbody id="admin-products-tbody"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- ===== ORDERS ===== -->
+      <div id="section-orders" class="hidden">
+        <h2 class="text-xl font-bold text-gray-900 dark:text-white mb-6">Manajemen Pesanan</h2>
+        <div class="bg-white dark:bg-slate-800 rounded-2xl border border-gray-200 dark:border-slate-700 overflow-hidden">
+          <div class="overflow-x-auto">
+            <table class="w-full">
+              <thead class="bg-gray-50 dark:bg-slate-700/50">
+                <tr>
+                  <th class="text-left py-3 px-4 text-xs font-semibold text-gray-500 dark:text-slate-400 uppercase">ID Transaksi</th>
+                  <th class="text-left py-3 px-4 text-xs font-semibold text-gray-500 dark:text-slate-400 uppercase">Pelanggan</th>
+                  <th class="text-left py-3 px-4 text-xs font-semibold text-gray-500 dark:text-slate-400 uppercase">Tanggal</th>
+                  <th class="text-left py-3 px-4 text-xs font-semibold text-gray-500 dark:text-slate-400 uppercase">Total</th>
+                  <th class="text-left py-3 px-4 text-xs font-semibold text-gray-500 dark:text-slate-400 uppercase">Status</th>
+                  <th class="text-left py-3 px-4 text-xs font-semibold text-gray-500 dark:text-slate-400 uppercase">Aksi</th>
+                </tr>
+              </thead>
+              <tbody id="admin-orders-tbody"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- ===== USERS ===== -->
+      <div id="section-users" class="hidden">
+        <h2 class="text-xl font-bold text-gray-900 dark:text-white mb-6">Manajemen Pengguna</h2>
+        <div class="bg-white dark:bg-slate-800 rounded-2xl border border-gray-200 dark:border-slate-700 overflow-hidden">
+          <div class="overflow-x-auto">
+            <table class="w-full">
+              <thead class="bg-gray-50 dark:bg-slate-700/50">
+                <tr>
+                  <th class="text-left py-3 px-4 text-xs font-semibold text-gray-500 dark:text-slate-400 uppercase">Nama</th>
+                  <th class="text-left py-3 px-4 text-xs font-semibold text-gray-500 dark:text-slate-400 uppercase">Email</th>
+                  <th class="text-left py-3 px-4 text-xs font-semibold text-gray-500 dark:text-slate-400 uppercase">Role</th>
+                  <th class="text-left py-3 px-4 text-xs font-semibold text-gray-500 dark:text-slate-400 uppercase">Terdaftar</th>
+                  <th class="text-left py-3 px-4 text-xs font-semibold text-gray-500 dark:text-slate-400 uppercase">Aksi</th>
+                </tr>
+              </thead>
+              <tbody id="admin-users-tbody"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+    </main>
+  </div>
+</div>
+
+<!-- ===== USER EDIT MODAL ===== -->
+<div id="user-modal" class="hidden fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-4">
+  <div class="bg-white dark:bg-slate-800 rounded-2xl w-full max-w-md shadow-2xl">
+    <div class="flex items-center justify-between p-6 border-b border-gray-200 dark:border-slate-700">
+      <h3 class="text-lg font-bold text-gray-900 dark:text-white">Edit Pengguna</h3>
+      <button id="close-user-modal" class="w-8 h-8 rounded-lg flex items-center justify-center hover:bg-gray-100 dark:hover:bg-slate-700 text-gray-500"><i class="fas fa-times"></i></button>
+    </div>
+    <form id="user-form" novalidate class="p-6 space-y-4">
+      <div>
+        <label class="block text-sm font-medium text-gray-700 dark:text-slate-300 mb-1.5">Nama Lengkap *</label>
+        <input type="text" id="uf-name" class="w-full px-4 py-2.5 rounded-xl border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-gray-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500" />
+      </div>
+      <div>
+        <label class="block text-sm font-medium text-gray-700 dark:text-slate-300 mb-1.5">Email</label>
+        <input type="email" id="uf-email" disabled class="w-full px-4 py-2.5 rounded-xl border border-gray-200 dark:border-slate-700 bg-gray-50 dark:bg-slate-800 text-gray-400 text-sm cursor-not-allowed" />
+        <p class="text-xs text-gray-400 mt-1">Email tidak dapat diubah</p>
+      </div>
+      <div>
+        <label class="block text-sm font-medium text-gray-700 dark:text-slate-300 mb-1.5">No. HP</label>
+        <input type="tel" id="uf-phone" placeholder="08xxxxxxxxxx" class="w-full px-4 py-2.5 rounded-xl border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-gray-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500" />
+      </div>
+      <div>
+        <label class="block text-sm font-medium text-gray-700 dark:text-slate-300 mb-1.5">Role</label>
+        <select id="uf-role" class="w-full px-4 py-2.5 rounded-xl border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-gray-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500">
+          <option value="customer">Customer</option>
+          <option value="admin">Admin</option>
+        </select>
+      </div>
+      <div>
+        <label class="block text-sm font-medium text-gray-700 dark:text-slate-300 mb-1.5">Reset Password <span class="text-gray-400 font-normal">(kosongkan jika tidak ingin mengubah)</span></label>
+        <input type="password" id="uf-password" placeholder="Password baru (min. 6 karakter)" class="w-full px-4 py-2.5 rounded-xl border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-gray-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500" />
+      </div>
+      <div class="flex gap-3 pt-2">
+        <button type="button" id="close-user-modal-2" class="flex-1 py-2.5 border border-gray-300 dark:border-slate-600 text-gray-700 dark:text-slate-300 text-sm font-medium rounded-xl hover:bg-gray-50 dark:hover:bg-slate-700 transition">Batal</button>
+        <button type="submit" class="flex-1 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-semibold rounded-xl transition">Simpan</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- ===== PRODUCT MODAL ===== -->
+<div id="product-modal" class="hidden fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-4">
+  <div class="bg-white dark:bg-slate-800 rounded-2xl w-full max-w-lg max-h-[90vh] overflow-y-auto shadow-2xl">
+    <div class="flex items-center justify-between p-6 border-b border-gray-200 dark:border-slate-700">
+      <h3 id="modal-title" class="text-lg font-bold text-gray-900 dark:text-white">Tambah Produk</h3>
+      <button id="close-product-modal" class="w-8 h-8 rounded-lg flex items-center justify-center hover:bg-gray-100 dark:hover:bg-slate-700 text-gray-500"><i class="fas fa-times"></i></button>
+    </div>
+    <form id="product-form" novalidate class="p-6 space-y-4">
+      <div>
+        <label class="block text-sm font-medium text-gray-700 dark:text-slate-300 mb-1.5">Nama Produk *</label>
+        <input type="text" id="pf-name" class="w-full px-4 py-2.5 rounded-xl border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-gray-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500" />
+        <p id="pf-name-error" class="hidden mt-1 text-xs text-red-500"></p>
+      </div>
+      <div class="grid grid-cols-2 gap-4">
+        <div>
+          <label class="block text-sm font-medium text-gray-700 dark:text-slate-300 mb-1.5">Kategori *</label>
+          <select id="pf-category" class="w-full px-4 py-2.5 rounded-xl border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-gray-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500">
+            <option value="">Pilih kategori</option>
+            <option value="Hoodie">Hoodie</option>
+            <option value="Jacket">Jacket</option>
+            <option value="T-Shirt">T-Shirt</option>
+            <option value="Pants">Pants</option>
+          </select>
+          <p id="pf-category-error" class="hidden mt-1 text-xs text-red-500"></p>
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-gray-700 dark:text-slate-300 mb-1.5">Harga (Rp) *</label>
+          <input type="number" id="pf-price" min="0" class="w-full px-4 py-2.5 rounded-xl border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-gray-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500" />
+          <p id="pf-price-error" class="hidden mt-1 text-xs text-red-500"></p>
+        </div>
+      </div>
+      <div class="grid grid-cols-2 gap-4">
+        <div>
+          <label class="block text-sm font-medium text-gray-700 dark:text-slate-300 mb-1.5">Stok *</label>
+          <input type="number" id="pf-stock" min="0" class="w-full px-4 py-2.5 rounded-xl border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-gray-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500" />
+          <p id="pf-stock-error" class="hidden mt-1 text-xs text-red-500"></p>
+        </div>
+        <div class="flex items-center gap-3 pt-6">
+          <input type="checkbox" id="pf-featured" class="w-4 h-4 accent-indigo-600" />
+          <label for="pf-featured" class="text-sm font-medium text-gray-700 dark:text-slate-300">Featured</label>
+        </div>
+      </div>
+      <div>
+        <label class="block text-sm font-medium text-gray-700 dark:text-slate-300 mb-1.5">URL Gambar *</label>
+        <input type="url" id="pf-image" placeholder="https://..." class="w-full px-4 py-2.5 rounded-xl border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-gray-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500" />
+        <p id="pf-image-error" class="hidden mt-1 text-xs text-red-500"></p>
+      </div>
+      <div>
+        <label class="block text-sm font-medium text-gray-700 dark:text-slate-300 mb-1.5">Deskripsi *</label>
+        <textarea id="pf-description" rows="3" class="w-full px-4 py-2.5 rounded-xl border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-gray-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 resize-none"></textarea>
+        <p id="pf-description-error" class="hidden mt-1 text-xs text-red-500"></p>
+      </div>
+      <div>
+        <label class="block text-sm font-medium text-gray-700 dark:text-slate-300 mb-1.5">Tags (pisahkan dengan koma)</label>
+        <input type="text" id="pf-tags" placeholder="casual, winter, unisex" class="w-full px-4 py-2.5 rounded-xl border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-gray-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500" />
+      </div>
+      <div class="flex gap-3 pt-2">
+        <button type="button" id="close-product-modal-2" class="flex-1 py-2.5 border border-gray-300 dark:border-slate-600 text-gray-700 dark:text-slate-300 text-sm font-medium rounded-xl hover:bg-gray-50 dark:hover:bg-slate-700 transition">Batal</button>
+        <button type="submit" class="flex-1 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-semibold rounded-xl transition">Simpan</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- ===== ORDER DETAIL MODAL ===== -->
+<div id="order-detail-modal" class="hidden fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-4">
+  <div class="bg-white dark:bg-slate-800 rounded-2xl w-full max-w-lg max-h-[90vh] overflow-y-auto shadow-2xl">
+    <div class="flex items-center justify-between p-6 border-b border-gray-200 dark:border-slate-700">
+      <h3 class="text-lg font-bold text-gray-900 dark:text-white">Detail Pesanan</h3>
+      <button id="close-order-modal" class="w-8 h-8 rounded-lg flex items-center justify-center hover:bg-gray-100 dark:hover:bg-slate-700 text-gray-500"><i class="fas fa-times"></i></button>
+    </div>
+    <div id="order-detail-body" class="p-6"></div>
+  </div>
+</div>
+
+<script type="module">
+  import { seedDataIfNeeded, initDarkMode, wireDarkToggle, Session } from './js/app.js';
+  import { initAdminPage } from './js/admin.js';
+
+  document.addEventListener('DOMContentLoaded', async () => {
+    initDarkMode();
+    wireDarkToggle();
+    await seedDataIfNeeded();
+    initAdminPage();
+
+    document.getElementById('admin-logout')?.addEventListener('click', () => {
+      Session.clear();
+      window.location.href = 'index.html';
+    });
+    document.getElementById('close-product-modal-2')?.addEventListener('click', () => {
+      document.getElementById('product-modal')?.classList.add('hidden');
+    });
+    document.getElementById('close-user-modal')?.addEventListener('click', () => {
+      document.getElementById('user-modal')?.classList.add('hidden');
+    });
+    document.getElementById('close-user-modal-2')?.addEventListener('click', () => {
+      document.getElementById('user-modal')?.classList.add('hidden');
+    });
+    document.getElementById('user-modal')?.addEventListener('click', (e) => {
+      if (e.target === document.getElementById('user-modal')) document.getElementById('user-modal').classList.add('hidden');
+    });
+  });
+</script>
+</body>
+</html>

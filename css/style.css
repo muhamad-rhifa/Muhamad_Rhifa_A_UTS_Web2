@@ -1,0 +1,286 @@
+/* RZStore — Design System CSS */
+
+/* ============================================================
+   CSS Custom Properties — Light Theme (default)
+   ============================================================ */
+:root {
+  --color-primary:      #6366f1;
+  --color-primary-dark: #4f46e5;
+  --color-success:      #22c55e;
+  --color-error:        #ef4444;
+  --color-info:         #3b82f6;
+  --color-warning:      #f59e0b;
+
+  --bg-base:        #f9fafb;
+  --bg-card:        #ffffff;
+  --text-primary:   #111827;
+  --text-secondary: #6b7280;
+  --border:         #e5e7eb;
+}
+
+/* ============================================================
+   CSS Custom Properties — Dark Theme
+   ============================================================ */
+[data-theme="dark"],
+html.dark {
+  --bg-base:        #0f172a;
+  --bg-card:        #1e293b;
+  --text-primary:   #f1f5f9;
+  --text-secondary: #94a3b8;
+  --border:         #334155;
+}
+
+/* ============================================================
+   Dark Mode — Guaranteed working approach
+   Menggunakan CSS custom properties + forced overrides
+   ============================================================ */
+
+/* Set color-scheme agar browser tahu mode */
+html.dark {
+  color-scheme: dark;
+}
+
+html:not(.dark) {
+  color-scheme: light;
+}
+
+/* Override body */
+html.dark body {
+  background-color: #0f172a !important;
+  color: #e2e8f0 !important;
+}
+
+/* Semua div/section/article/main dengan background putih atau abu */
+html.dark div[class*="bg-white"],
+html.dark section[class*="bg-white"],
+html.dark aside[class*="bg-white"],
+html.dark header[class*="bg-white"],
+html.dark main[class*="bg-white"] {
+  background-color: #1e293b !important;
+}
+
+html.dark div[class*="bg-gray-50"],
+html.dark section[class*="bg-gray-50"],
+html.dark main[class*="bg-gray-50"] {
+  background-color: #0f172a !important;
+}
+
+html.dark div[class*="bg-gray-100"],
+html.dark section[class*="bg-gray-100"] {
+  background-color: #1e293b !important;
+}
+
+/* Navbar */
+html.dark nav {
+  background-color: rgba(15, 23, 42, 0.97) !important;
+  border-color: #334155 !important;
+}
+
+/* Text */
+html.dark *[class*="text-gray-900"] { color: #f1f5f9 !important; }
+html.dark *[class*="text-gray-800"] { color: #e2e8f0 !important; }
+html.dark *[class*="text-gray-700"] { color: #cbd5e1 !important; }
+html.dark *[class*="text-gray-600"] { color: #94a3b8 !important; }
+html.dark *[class*="text-gray-500"] { color: #64748b !important; }
+
+/* Borders */
+html.dark *[class*="border-gray-100"] { border-color: #1e293b !important; }
+html.dark *[class*="border-gray-200"] { border-color: #334155 !important; }
+html.dark *[class*="border-gray-300"] { border-color: #475569 !important; }
+
+/* Inputs */
+html.dark input:not([type="radio"]):not([type="checkbox"]),
+html.dark textarea,
+html.dark select {
+  background-color: #1e293b !important;
+  color: #f1f5f9 !important;
+  border-color: #475569 !important;
+}
+html.dark input::placeholder,
+html.dark textarea::placeholder { color: #64748b !important; }
+
+/* Footer */
+html.dark footer { background-color: #020617 !important; }
+
+/* Admin sidebar */
+html.dark #admin-sidebar { background-color: #020617 !important; }
+
+/* Tables */
+html.dark thead tr { background-color: rgba(30,41,59,0.9) !important; }
+html.dark tbody tr:hover { background-color: rgba(51,65,85,0.4) !important; }
+html.dark td, html.dark th { border-color: #334155 !important; color: #cbd5e1 !important; }
+
+/* Mobile drawer */
+html.dark #mobile-drawer { background-color: #1e293b !important; }
+
+/* Modals */
+html.dark #product-modal > div,
+html.dark #order-detail-modal > div { background-color: #1e293b !important; }
+
+/* ============================================================
+   Toast Animations
+   ============================================================ */
+@keyframes toast-in {
+  from { transform: translateX(110%); opacity: 0; }
+  to   { transform: translateX(0);    opacity: 1; }
+}
+@keyframes toast-out {
+  from { transform: translateX(0);    opacity: 1; }
+  to   { transform: translateX(110%); opacity: 0; }
+}
+.toast-enter { animation: toast-in  0.3s  ease forwards; }
+.toast-exit  { animation: toast-out 0.25s ease forwards; }
+
+/* ============================================================
+   Card Hover Transitions
+   ============================================================ */
+.card-hover {
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.card-hover:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 25px -5px rgba(0,0,0,0.12), 0 8px 10px -6px rgba(0,0,0,0.08);
+}
+
+/* ============================================================
+   Skeleton Loader
+   ============================================================ */
+@keyframes shimmer {
+  0%   { background-position: -200% 0; }
+  100% { background-position:  200% 0; }
+}
+.skeleton {
+  background: linear-gradient(90deg, #e5e7eb 25%, #f3f4f6 50%, #e5e7eb 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+  border-radius: 4px;
+}
+html.dark .skeleton {
+  background: linear-gradient(90deg, #334155 25%, #475569 50%, #334155 75%);
+  background-size: 200% 100%;
+}
+
+/* ============================================================
+   Custom Scrollbar
+   ============================================================ */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background-color: #d1d5db; border-radius: 9999px; }
+::-webkit-scrollbar-thumb:hover { background-color: #9ca3af; }
+html.dark ::-webkit-scrollbar-thumb { background-color: #475569; }
+html.dark ::-webkit-scrollbar-thumb:hover { background-color: #64748b; }
+
+/* ============================================================
+   Utility
+   ============================================================ */
+.line-clamp-2 {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* ============================================================
+   Responsive & Accessibility Polish
+   ============================================================ */
+
+/* Focus states untuk keyboard navigation */
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible {
+  outline: 2px solid #6366f1 !important;
+  outline-offset: 2px !important;
+}
+
+/* Skip to content link */
+.skip-link {
+  position: absolute;
+  top: -100%;
+  left: 0;
+  background: #6366f1;
+  color: white;
+  padding: 8px 16px;
+  border-radius: 0 0 8px 0;
+  font-size: 14px;
+  font-weight: 600;
+  z-index: 9999;
+  transition: top 0.2s;
+}
+.skip-link:focus { top: 0; }
+
+/* Smooth scroll */
+html { scroll-behavior: smooth; }
+
+/* Prevent layout shift on image load */
+img {
+  max-width: 100%;
+  height: auto;
+}
+
+/* Product grid responsive */
+#product-grid,
+#featured-grid,
+#wishlist-grid,
+#related-grid {
+  display: grid;
+  gap: 1rem;
+}
+
+/* Mobile: 2 kolom */
+@media (max-width: 639px) {
+  #product-grid,
+  #featured-grid,
+  #wishlist-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.75rem;
+  }
+  #related-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* Tablet: 2-3 kolom */
+@media (min-width: 640px) and (max-width: 1023px) {
+  #product-grid,
+  #featured-grid,
+  #wishlist-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+/* Desktop: 4 kolom */
+@media (min-width: 1024px) {
+  #product-grid,
+  #featured-grid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+  #wishlist-grid {
+    grid-template-columns: repeat(5, 1fr);
+  }
+  #related-grid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+/* Touch target minimum size — hanya untuk button, bukan semua link */
+button {
+  min-height: 36px;
+}
+
+/* Prevent text overflow */
+.truncate-2 {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* Dark mode transition smooth */
+html {
+  transition: background-color 0.2s ease;
+}
+body {
+  transition: background-color 0.2s ease, color 0.2s ease;
+}

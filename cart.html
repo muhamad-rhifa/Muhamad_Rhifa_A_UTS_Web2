@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Keranjang — RZStore</title>
+  <script>(function(){const t=localStorage.getItem('rz_theme');const d=t==='dark'||(t===null&&window.matchMedia('(prefers-color-scheme:dark)').matches);if(d){document.documentElement.classList.add('dark');document.documentElement.setAttribute('data-theme','dark');}else{document.documentElement.setAttribute('data-theme','light');}})()</script>
+  <script>tailwind.config={darkMode:'class',theme:{extend:{colors:{primary:{DEFAULT:'#6366f1',dark:'#4f46e5'}}}}}</script>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/style.css" />
+  <style>
+    html.dark body { background-color: #0f172a !important; color: #e2e8f0 !important; }
+    html.dark nav { background-color: rgba(15,23,42,0.97) !important; border-color: #334155 !important; }
+    html.dark .bg-white { background-color: #1e293b !important; }
+    html.dark .bg-gray-50 { background-color: #0f172a !important; }
+    html.dark .bg-gray-100 { background-color: #1e293b !important; }
+    html.dark .text-gray-900 { color: #f1f5f9 !important; }
+    html.dark .text-gray-800 { color: #e2e8f0 !important; }
+    html.dark .text-gray-700 { color: #cbd5e1 !important; }
+    html.dark .text-gray-600 { color: #94a3b8 !important; }
+    html.dark .text-gray-500 { color: #64748b !important; }
+    html.dark .border-gray-200 { border-color: #334155 !important; }
+    html.dark .border-gray-300 { border-color: #475569 !important; }
+    html.dark .border-gray-100 { border-color: #1e293b !important; }
+    html.dark input:not([type=radio]):not([type=checkbox]),html.dark textarea,html.dark select { background-color: #1e293b !important; color: #f1f5f9 !important; border-color: #475569 !important; }
+    html.dark footer { background-color: #020617 !important; }
+    html.dark #mobile-drawer { background-color: #1e293b !important; }
+    html.dark #admin-sidebar { background-color: #020617 !important; }
+    html.dark #product-modal > div, html.dark #order-detail-modal > div { background-color: #1e293b !important; }
+    html.dark thead tr { background-color: rgba(30,41,59,0.9) !important; }
+    html.dark td, html.dark th { border-color: #334155 !important; color: #cbd5e1 !important; }
+  </style>
+</head>
+<body class="bg-gray-50 dark:bg-slate-900 font-sans min-h-screen">
+
+  <!-- NAVBAR -->
+  <nav class="sticky top-0 z-40 bg-white/95 dark:bg-slate-900/95 backdrop-blur border-b border-gray-200 dark:border-slate-700">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex items-center justify-between h-16">
+        <a href="index.html" class="flex items-center gap-2 text-xl font-bold text-indigo-600 dark:text-indigo-400"><i class="fas fa-store"></i><span>RZStore</span></a>
+        <div class="hidden md:flex items-center gap-6">
+          <a href="index.html" data-nav-link class="text-sm font-medium text-gray-600 dark:text-slate-300 hover:text-indigo-600 transition">Beranda</a>
+          <a href="shop.html" data-nav-link class="text-sm font-medium text-gray-600 dark:text-slate-300 hover:text-indigo-600 transition">Shop</a>
+          <a href="wishlist.html" data-nav-link class="text-sm font-medium text-gray-600 dark:text-slate-300 hover:text-indigo-600 transition">Wishlist</a>
+          <a href="orders.html" data-nav-link class="text-sm font-medium text-gray-600 dark:text-slate-300 hover:text-indigo-600 transition">Pesanan</a>
+          <a id="admin-nav-link" href="admin.html" class="hidden items-center gap-1.5 px-3 py-1.5 bg-purple-100 dark:bg-purple-900/30 text-purple-700 dark:text-purple-400 text-sm font-semibold rounded-lg hover:bg-purple-200 transition">
+            <i class="fas fa-shield-alt text-xs"></i> Admin
+          </a>
+        </div>
+        <div class="flex items-center gap-2">
+          <button id="dark-toggle" class="w-9 h-9 rounded-lg flex items-center justify-center hover:bg-gray-100 dark:hover:bg-slate-700 transition"><i class="fas fa-moon text-slate-600 dark:text-slate-300"></i></button>
+          <a href="cart.html" class="relative w-9 h-9 rounded-lg flex items-center justify-center hover:bg-gray-100 dark:hover:bg-slate-700 transition text-indigo-600">
+            <i class="fas fa-shopping-cart"></i>
+            <span id="cart-badge" class="hidden absolute -top-1 -right-1 w-5 h-5 bg-indigo-600 text-white text-xs rounded-full flex items-center justify-center font-bold">0</span>
+          </a>
+          <a id="user-name" href="profile.html" class="hidden text-sm font-medium text-gray-700 dark:text-slate-300 max-w-[100px] truncate hover:text-indigo-600 transition"></a>
+          <a id="login-btn" href="login.html" class="hidden px-3 py-1.5 bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-semibold rounded-lg transition">Masuk</a>
+          <button id="logout-btn" class="hidden px-3 py-1.5 border border-gray-300 dark:border-slate-600 text-gray-700 dark:text-slate-300 text-sm font-medium rounded-lg hover:bg-gray-50 dark:hover:bg-slate-700 transition">Keluar</button>
+          <button id="hamburger-btn" class="md:hidden w-9 h-9 rounded-lg flex items-center justify-center hover:bg-gray-100 dark:hover:bg-slate-700 transition text-gray-600 dark:text-slate-300"><i class="fas fa-bars"></i></button>
+        </div>
+      </div>
+    </div>
+  </nav>
+  <div id="drawer-overlay" class="hidden fixed inset-0 bg-black/50 z-40"></div>
+  <div id="mobile-drawer" class="fixed top-0 right-0 h-full w-72 bg-white dark:bg-slate-800 z-50 transform translate-x-full transition-transform duration-300 shadow-2xl">
+    <div class="flex items-center justify-between p-4 border-b border-gray-200 dark:border-slate-700">
+      <span class="font-bold text-indigo-600 dark:text-indigo-400"><i class="fas fa-store mr-2"></i>RZStore</span>
+      <button id="drawer-close" class="w-8 h-8 rounded-lg flex items-center justify-center hover:bg-gray-100 dark:hover:bg-slate-700 text-gray-500"><i class="fas fa-times"></i></button>
+    </div>
+    <nav class="p-4 space-y-1">
+      <a href="index.html" class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-gray-700 dark:text-slate-300 hover:bg-indigo-50 dark:hover:bg-slate-700 text-sm font-medium"><i class="fas fa-home w-4"></i>Beranda</a>
+      <a href="shop.html" class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-gray-700 dark:text-slate-300 hover:bg-indigo-50 dark:hover:bg-slate-700 text-sm font-medium"><i class="fas fa-store w-4"></i>Shop</a>
+      <a href="wishlist.html" class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-gray-700 dark:text-slate-300 hover:bg-indigo-50 dark:hover:bg-slate-700 text-sm font-medium"><i class="fas fa-heart w-4"></i>Wishlist</a>
+      <a href="orders.html" class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-gray-700 dark:text-slate-300 hover:bg-indigo-50 dark:hover:bg-slate-700 text-sm font-medium"><i class="fas fa-box w-4"></i>Pesanan</a>
+      <a id="mobile-admin-link" href="admin.html" class="hidden items-center gap-3 px-3 py-2.5 rounded-lg text-purple-700 dark:text-purple-400 bg-purple-50 dark:bg-purple-900/20 text-sm font-semibold"><i class="fas fa-shield-alt w-4"></i>Admin Panel</a>
+    </nav>
+    <div class="p-4 border-t border-gray-200 dark:border-slate-700 space-y-2">
+      <span id="mobile-user-name" class="hidden block text-sm font-medium text-gray-700 dark:text-slate-300 px-3 py-2"></span>
+      <a id="mobile-login-btn" href="login.html" class="hidden w-full text-center px-4 py-2 bg-indigo-600 text-white text-sm font-semibold rounded-lg">Masuk</a>
+      <button id="mobile-logout-btn" class="hidden w-full px-4 py-2 border border-gray-300 dark:border-slate-600 text-gray-700 dark:text-slate-300 text-sm font-medium rounded-lg">Keluar</button>
+    </div>
+  </div>
+
+  <!-- MAIN -->
+  <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <h1 class="text-2xl font-bold text-gray-900 dark:text-white mb-6">
+      <i class="fas fa-shopping-cart text-indigo-600 mr-2"></i>Keranjang Belanja
+    </h1>
+
+    <!-- Empty State -->
+    <div id="cart-empty" class="hidden text-center py-20">
+      <div class="w-24 h-24 bg-indigo-50 dark:bg-slate-700 rounded-full flex items-center justify-center mx-auto mb-4">
+        <i class="fas fa-shopping-cart text-4xl text-indigo-300"></i>
+      </div>
+      <h2 class="text-xl font-bold text-gray-900 dark:text-white mb-2">Keranjang Kosong</h2>
+      <p class="text-gray-500 dark:text-slate-400 text-sm mb-6">Belum ada produk di keranjangmu. Yuk mulai belanja!</p>
+      <a href="shop.html" class="inline-flex items-center gap-2 px-6 py-3 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold rounded-xl transition">
+        <i class="fas fa-store"></i> Mulai Belanja
+      </a>
+    </div>
+
+    <!-- Cart Content -->
+    <div id="cart-content" class="hidden">
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+
+        <!-- Items -->
+        <div class="lg:col-span-2">
+          <div class="bg-white dark:bg-slate-800 rounded-2xl border border-gray-200 dark:border-slate-700 p-6">
+            <div class="flex items-center justify-between mb-4">
+              <h2 class="font-semibold text-gray-900 dark:text-white">Item Keranjang</h2>
+              <span id="summary-count" class="text-sm text-gray-500 dark:text-slate-400"></span>
+            </div>
+            <div id="cart-items"></div>
+          </div>
+          <a href="shop.html" class="inline-flex items-center gap-2 mt-4 text-sm text-indigo-600 dark:text-indigo-400 hover:underline font-medium">
+            <i class="fas fa-arrow-left"></i> Lanjut Belanja
+          </a>
+        </div>
+
+        <!-- Summary -->
+        <div class="lg:col-span-1">
+          <div class="bg-white dark:bg-slate-800 rounded-2xl border border-gray-200 dark:border-slate-700 p-6 sticky top-24">
+            <h2 class="font-semibold text-gray-900 dark:text-white mb-4">Ringkasan Pesanan</h2>
+            <div class="space-y-3 text-sm">
+              <div class="flex justify-between text-gray-600 dark:text-slate-400">
+                <span>Subtotal</span>
+                <span id="summary-subtotal" class="font-medium text-gray-900 dark:text-white"></span>
+              </div>
+              <div class="flex justify-between text-gray-600 dark:text-slate-400">
+                <span>Ongkos Kirim</span>
+                <span id="summary-shipping" class="font-medium text-green-600"></span>
+              </div>
+              <div class="border-t border-gray-200 dark:border-slate-700 pt-3 flex justify-between font-bold text-base">
+                <span class="text-gray-900 dark:text-white">Total</span>
+                <span id="summary-total" class="text-indigo-600 dark:text-indigo-400"></span>
+              </div>
+            </div>
+            <a href="checkout.html"
+              class="mt-5 w-full flex items-center justify-center gap-2 py-3 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold rounded-xl transition text-sm">
+              <i class="fas fa-lock"></i> Lanjut ke Checkout
+            </a>
+            <p class="text-xs text-center text-gray-400 dark:text-slate-500 mt-3">
+              <i class="fas fa-shield-alt mr-1"></i>Transaksi aman & terpercaya
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="bg-gray-900 dark:bg-slate-950 text-white mt-16">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <div class="flex flex-col sm:flex-row items-center justify-between gap-3">
+        <div class="flex items-center gap-2 text-lg font-bold text-indigo-400"><i class="fas fa-store"></i><span>RZStore</span></div>
+        <p class="text-gray-500 text-xs">© 2025 RZStore. All rights reserved.</p>
+      </div>
+    </div>
+  </footer>
+
+  <script type="module">
+    import { seedDataIfNeeded, initNavbar } from './js/app.js';
+    import { initCartPage } from './js/cart.js';
+
+    document.addEventListener('DOMContentLoaded', async () => {
+      await seedDataIfNeeded();
+      initNavbar();
+      initCartPage();
+    });
+  </script>
+</body>
+</html>
