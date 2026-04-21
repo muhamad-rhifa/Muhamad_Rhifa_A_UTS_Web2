@@ -1,4 +1,4 @@
-# RZStore — Online Shop# RZStore — Online Shop
+# RZStore — Online Shop
 
 Aplikasi online shop fullstack client-side yang dibangun dengan **Vanilla JavaScript (ES6+)**, **Tailwind CSS**, dan **LocalStorage** sebagai database simulasi.
 
